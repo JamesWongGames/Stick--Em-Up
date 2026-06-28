@@ -1,64 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact – Stick em’ up!</title>
+  <title>Kontakt – Stick ’Em Up!</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header class="topbar">
-  <h1>Stick em’ up!</h1>
+  <h1>Stick ’Em Up!</h1>
   <nav>
-    <a href="index.html">Shop</a>
-    <a href="contact.html">Contact us</a>
+    <a href="index.html">Butik</a>
+    <a href="contact.html">Kontakt os</a>
   </nav>
-  <button class="cart-btn" onclick="toggleCart()">🛒 Cart (<span id="cart-count">0</span>)</button>
+  <button class="cart-btn" onclick="toggleCart()">🛒 Kurv (<span id="cart-count">0</span>)</button>
 </header>
 
 <div class="cart-drawer" id="cart-drawer">
-  <h3>Your cart</h3>
+  <h3>Din kurv</h3>
   <div id="cart-items"></div>
-  <p class="cart-total">Total: $<span id="cart-total">0.00</span></p>
-  <button class="checkout-btn">Checkout</button>
+  <p class="cart-total">I alt: $<span id="cart-total">0.00</span></p>
+  <button class="checkout-btn">Gå til betaling</button>
 </div>
 
 <div class="contact-page">
-  <h1>Contact us</h1>
-  <p class="contact-intro">Have a question or issue with your order? Fill out the form below and we'll get back to you within 24 hours.</p>
+  <h1>Kontakt os</h1>
+  <p class="contact-intro">Har du et spørgsmål eller et problem? Skriv til os, så svarer vi inden for 24 timer.</p>
 
   <form class="contact-form" action="https://formspree.io/f/mjgqrojn" method="POST" onsubmit="handleSubmit(event)">
 
     <div class="form-group">
-      <label for="name">Your name</label>
-      <input type="text" id="name" name="name" placeholder="Jane Smith" required>
+      <label for="name">Dit navn</label>
+      <input type="text" id="name" name="name" placeholder="Navn" required>
     </div>
 
     <div class="form-group">
-      <label for="email">Email address</label>
-      <input type="email" id="email" name="_replyto" placeholder="jane@example.com" required>
+      <label for="email">E-mail</label>
+      <input type="email" id="email" name="_replyto" placeholder="mail@eksempel.dk" required>
     </div>
 
     <div class="form-group">
-      <label for="subject">Subject</label>
+      <label for="subject">Emne</label>
       <select id="subject" name="subject">
-        <option value="">Select a topic</option>
-        <option value="Order issue">Order issue</option>
-        <option value="Shipping question">Shipping question</option>
-        <option value="Product question">Product question</option>
-        <option value="Other">Other</option>
+        <option value="">Vælg et emne</option>
+        <option value="Order issue">Ordreproblem</option>
+        <option value="Shipping question">Forsendelse</option>
+        <option value="Product question">Produkt</option>
+        <option value="Other">Andet</option>
       </select>
     </div>
 
     <div class="form-group">
-      <label for="message">Message</label>
-      <textarea id="message" name="message" rows="5" placeholder="Tell us what's on your mind..." required></textarea>
+      <label for="message">Besked</label>
+      <textarea id="message" name="message" rows="5" placeholder="Skriv din besked..." required></textarea>
     </div>
 
-    <button type="submit" class="submit-btn">Send message</button>
+    <button type="submit" class="submit-btn">Send besked</button>
 
-    <p class="form-success" id="form-success">Thanks! We'll get back to you soon.</p>
+    <p class="form-success" id="form-success">Tak! Vi vender tilbage snart.</p>
 
   </form>
 </div>
@@ -69,6 +69,7 @@
   function handleSubmit(e) {
     e.preventDefault();
     const form = e.target;
+
     fetch(form.action, {
       method: 'POST',
       body: new FormData(form),
@@ -88,12 +89,13 @@
   }
 
   function updateCart() {
-    localStorage.setItem('cart', JSON.stringify(cart));
     document.getElementById('cart-count').textContent = cart.reduce((sum, i) => sum + i.qty, 0);
-    document.getElementById('cart-total').textContent = cart.reduce((sum, i) => sum + i.price * i.qty, 0).toFixed(2);
+    document.getElementById('cart-total').textContent =
+      cart.reduce((sum, i) => sum + i.price * i.qty, 0).toFixed(2);
+
     const list = document.getElementById('cart-items');
     list.innerHTML = cart.length === 0
-      ? '<p class="empty">Your cart is empty.</p>'
+      ? '<p class="empty">Din kurv er tom.</p>'
       : cart.map(i => `
           <div class="cart-item">
             <span>${i.name} x${i.qty}</span>

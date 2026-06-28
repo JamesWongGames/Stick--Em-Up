@@ -1,39 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stick em’ up!</title>
+  <title>Stick ’Em Up!</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header class="topbar">
-  <h1>Stick em’ up!</h1>
+  <h1>Stick ’Em Up!</h1>
   <nav>
-    <a href="index.html">Shop</a>
-    <a href="contact.html">Contact us</a>
+    <a href="index.html">Butik</a>
+    <a href="contact.html">Kontakt os</a>
   </nav>
-  <button class="cart-btn" onclick="toggleCart()">🛒 Cart (<span id="cart-count">0</span>)</button>
+  <button class="cart-btn" onclick="toggleCart()">🛒 Kurv (<span id="cart-count">0</span>)</button>
 </header>
 
 <div class="cart-drawer" id="cart-drawer">
-  <h3>Your cart</h3>
+  <h3>Din kurv</h3>
   <div id="cart-items"></div>
-  <p class="cart-total">Total: $<span id="cart-total">0.00</span></p>
-  <button class="checkout-btn">Checkout</button>
+  <p class="cart-total">I alt: $<span id="cart-total">0.00</span></p>
+  <button class="checkout-btn">Gå til betaling</button>
 </div>
 
 <div class="shop-header">
   <div class="filters">
-    <a href="index.html"><button class="filter-btn">All</button></a>
-    <a href="cute.html"><button class="filter-btn active">Cute</button></a>
-    <a href="space.html"><button class="filter-btn">Space</button></a>
+    <a href="index.html"><button class="filter-btn">Alle</button></a>
+    <a href="cute.html"><button class="filter-btn active">Søde</button></a>
+    <a href="space.html"><button class="filter-btn">Rummet</button></a>
   </div>
 </div>
 
 <div class="grid">
-
   <a href="sleeping-star.html" class="card-link">
     <div class="card">
       <div class="img-wrap">
@@ -45,7 +44,6 @@
       </div>
     </div>
   </a>
-
 
   <a href="galaxy-duck.html" class="card-link">
     <div class="card">
@@ -59,7 +57,7 @@
     </div>
   </a>
 
-    <a href="pixel-cat.html" class="card-link">
+  <a href="pixel-cat.html" class="card-link">
     <div class="card">
       <div class="img-wrap">
         <img src="Pixel Cat.png" alt="Pixel Cat">
@@ -70,53 +68,41 @@
       </div>
     </div>
   </a>
-
 </div>
 
 <script>
-  let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 
-  function addToCart(name, price) {
-    const existing = cart.find(item => item.name === name);
-    if (existing) {
-      existing.qty++;
-    } else {
-      cart.push({ name, price, qty: 1 });
-    }
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCart();
-
-    const btn = document.querySelector('.add-btn-large');
-    btn.textContent = 'Added!';
-    setTimeout(() => btn.textContent = 'Add to cart', 1500);
-  }
-
-  function removeFromCart(name) {
-    cart = cart.filter(item => item.name !== name);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCart();
-  }
-
-  function updateCart() {
-    document.getElementById('cart-count').textContent = cart.reduce((sum, i) => sum + i.qty, 0);
-    document.getElementById('cart-total').textContent = cart.reduce((sum, i) => sum + i.price * i.qty, 0).toFixed(2);
-    const list = document.getElementById('cart-items');
-    list.innerHTML = cart.length === 0
-      ? '<p class="empty">Your cart is empty.</p>'
-      : cart.map(i => `
-          <div class="cart-item">
-            <span>${i.name} x${i.qty}</span>
-            <span>$${(i.price * i.qty).toFixed(2)}</span>
-            <button onclick="removeFromCart('${i.name}')">✕</button>
-          </div>
-        `).join('');
-  }
-
-  function toggleCart() {
-    document.getElementById('cart-drawer').classList.toggle('open');
-  }
-
+function removeFromCart(name) {
+  cart = cart.filter(item => item.name !== name);
+  localStorage.setItem('cart', JSON.stringify(cart));
   updateCart();
+}
+
+function updateCart() {
+  document.getElementById('cart-count').textContent =
+    cart.reduce((sum, i) => sum + i.qty, 0);
+
+  document.getElementById('cart-total').textContent =
+    cart.reduce((sum, i) => sum + i.price * i.qty, 0).toFixed(2);
+
+  const list = document.getElementById('cart-items');
+  list.innerHTML = cart.length === 0
+    ? '<p class="empty">Din kurv er tom.</p>'
+    : cart.map(i => `
+      <div class="cart-item">
+        <span>${i.name} x${i.qty}</span>
+        <span>$${(i.price * i.qty).toFixed(2)}</span>
+        <button onclick="removeFromCart('${i.name}')">✕</button>
+      </div>
+    `).join('');
+}
+
+function toggleCart() {
+  document.getElementById('cart-drawer').classList.toggle('open');
+}
+
+updateCart();
 </script>
 
 </body>
