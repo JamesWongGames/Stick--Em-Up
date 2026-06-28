@@ -14,7 +14,6 @@
     <a href="index.html">Butik</a>
     <a href="contact.html">Kontakt os</a>
   </nav>
-
   <button class="cart-btn" onclick="toggleCart()">
     🛒 Kurv (<span id="cart-count">0</span>)
   </button>
@@ -23,11 +22,7 @@
 <div class="cart-drawer" id="cart-drawer">
   <h3>Din kurv</h3>
   <div id="cart-items"></div>
-
-  <p class="cart-total">
-    I alt: <span id="cart-total">0.00</span> DKK
-  </p>
-
+  <p class="cart-total">I alt: <span id="cart-total">0.00</span> DKK</p>
   <button class="checkout-btn" onclick="checkout()">Gå til betaling</button>
 </div>
 
@@ -60,6 +55,15 @@
   </div>
 </div>
 
+<footer class="site-footer">
+  <p><strong>Stick' Em Up!</strong></p>
+  <p>Gratis fragt ved køb over 99 DKK &nbsp;·&nbsp; Levering 2–5 hverdage</p>
+  <p>Spørgsmål? <a href="contact.html">Kontakt os</a></p>
+  <p class="footer-small">© 2025 Stick' Em Up! &nbsp;·&nbsp; Alle priser inkl. moms</p>
+</footer>
+
+<div id="toast" class="toast"></div>
+
 <script>
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 
@@ -67,25 +71,30 @@ function saveCart() {
   localStorage.setItem('cart', JSON.stringify(cart));
 }
 
+function showToast(msg, type = 'success') {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast show' + (type === 'error' ? ' error' : '');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { toast.className = 'toast'; }, 2500);
+}
+
 function addToCart(name, price) {
   const total = cart.reduce((sum, i) => sum + i.qty, 0);
-
   if (total >= 10) {
-    alert('Du kan kun bestille 10 stickers ad gangen.');
+    showToast('Du kan kun bestille 10 stickers ad gangen.', 'error');
     return;
   }
-
   const existing = cart.find(item => item.name === name);
-
   if (existing) existing.qty++;
   else cart.push({ name, price, qty: 1 });
-
   saveCart();
   updateCart();
 
   const btn = document.querySelector('.add-btn-large');
   btn.textContent = 'Tilføjet!';
   setTimeout(() => btn.textContent = 'Tilføj til kurv', 1500);
+  showToast(name + ' tilføjet til kurv 🛒');
 }
 
 function removeFromCart(name) {
@@ -95,14 +104,9 @@ function removeFromCart(name) {
 }
 
 function updateCart() {
-  document.getElementById('cart-count').textContent =
-    cart.reduce((sum, i) => sum + i.qty, 0);
-
-  document.getElementById('cart-total').textContent =
-    cart.reduce((sum, i) => sum + i.price * i.qty, 0).toFixed(2);
-
+  document.getElementById('cart-count').textContent = cart.reduce((sum, i) => sum + i.qty, 0);
+  document.getElementById('cart-total').textContent = cart.reduce((sum, i) => sum + i.price * i.qty, 0).toFixed(2);
   const list = document.getElementById('cart-items');
-
   list.innerHTML = cart.length === 0
     ? '<p class="empty">Din kurv er tom.</p>'
     : cart.map(i => `
@@ -121,32 +125,22 @@ function toggleCart() {
 updateCart();
 
 async function checkout() {
-  const cartForStripe = cart.map(item => ({
-    name: item.name,
-    price: item.price,
-    qty: item.qty   // ✅ FIXED (was mismatch before)
-  }));
-
+  const cartForStripe = cart.map(item => ({ name: item.name, price: item.price, qty: item.qty }));
   try {
     const res = await fetch("/api/create-checkout-session", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(cartForStripe)
     });
-
     const data = await res.json();
-
     if (data.url) {
       window.location.href = data.url;
     } else {
-      console.log(data);
-      alert("Checkout failed");
+      showToast('Betaling mislykkedes. Prøv igen.', 'error');
     }
   } catch (err) {
     console.error(err);
-    alert("Server error");
+    showToast('Serverfejl. Prøv igen.', 'error');
   }
 }
 </script>

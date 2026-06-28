@@ -122,10 +122,33 @@ body {
   padding: 1rem 0;
 }
 
+/* HERO */
+.hero {
+  max-width: 900px;
+  margin: 32px auto 0;
+  padding: 28px 32px;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e8e8e8;
+  text-align: center;
+}
+
+.hero h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.hero p {
+  margin: 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
 /* CATEGORIES */
 .shop-header {
   max-width: 900px;
-  margin: 24px auto 0;
+  margin: 20px auto 0;
   padding: 0 16px;
 }
 
@@ -164,11 +187,16 @@ body {
 /* GRID */
 .grid {
   max-width: 900px;
-  margin: 30px auto;
+  margin: 20px auto;
   padding: 0 16px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 200px));
   gap: 18px;
+}
+
+/* CARD WRAP */
+.card-wrap {
+  position: relative;
 }
 
 /* CARD */
@@ -183,6 +211,32 @@ body {
 .card:hover {
   transform: translateY(-5px) scale(1.01);
   box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+}
+
+/* QUICK ADD BUTTON */
+.quick-add {
+  position: absolute;
+  bottom: 50px;
+  right: 10px;
+  background: #111;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.18s ease, background 0.18s ease;
+}
+
+.card-wrap:hover .quick-add {
+  opacity: 1;
+}
+
+.quick-add:hover {
+  background: #333;
 }
 
 /* IMAGE */
@@ -223,6 +277,60 @@ body {
   text-decoration: none;
   color: inherit;
   display: block;
+}
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: #111;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast.error {
+  background: #dc2626;
+}
+
+/* FOOTER */
+.site-footer {
+  margin-top: 48px;
+  border-top: 1px solid #e5e5e5;
+  background: white;
+  padding: 28px 16px;
+  text-align: center;
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.site-footer p {
+  margin: 4px 0;
+}
+
+.site-footer a {
+  color: #111;
+  text-decoration: underline;
+}
+
+.footer-small {
+  margin-top: 10px !important;
+  color: #aaa;
+  font-size: 0.8rem;
 }
 
 /* PRODUCT PAGE */
@@ -443,9 +551,23 @@ body {
     display: none;
   }
 
+  .hero {
+    margin: 16px 12px 0;
+    padding: 20px 16px;
+  }
+
+  .hero h2 {
+    font-size: 18px;
+  }
+
   .grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
+  }
+
+  .quick-add {
+    opacity: 1;
+    bottom: 46px;
   }
 
   .shop-header {
