@@ -80,6 +80,10 @@
 <script>
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 
+function saveCart() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
 function handleSubmit(e) {
   e.preventDefault();
   const form = e.target;
@@ -98,7 +102,7 @@ function handleSubmit(e) {
 
 function removeFromCart(name) {
   cart = cart.filter(item => item.name !== name);
-  localStorage.setItem('cart', JSON.stringify(cart));
+  saveCart();
   updateCart();
 }
 
@@ -127,28 +131,35 @@ function toggleCart() {
 }
 
 updateCart();
+
 async function checkout() {
   const cartForStripe = cart.map(item => ({
     name: item.name,
     price: item.price,
-    quantity: item.qty
+    qty: item.qty   // ✅ FIXED (was quantity)
   }));
 
-  const res = await fetch("/api/create-checkout-session", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(cartForStripe)
-  });
+  try {
+    const res = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(cartForStripe)
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (data.url) {
-    window.location.href = data.url;
-  } else {
-    alert("Checkout failed");
-    console.log(data);
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      console.log(data);
+      alert("Checkout failed");
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("Server error");
   }
 }
 </script>

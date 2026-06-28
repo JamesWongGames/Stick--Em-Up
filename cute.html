@@ -33,8 +33,8 @@
 
 <div class="shop-header">
   <div class="filters">
-    <a href="index.html"><button class="filter-btn">Alle</button></a>
-    <a href="cute.html"><button class="filter-btn active">Søde</button></a>
+    <a href="index.html"><button class="filter-btn active">Alle</button></a>
+    <a href="cute.html"><button class="filter-btn">Søde</button></a>
     <a href="space.html"><button class="filter-btn">Rummet</button></a>
   </div>
 </div>
@@ -82,9 +82,13 @@
 <script>
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 
+function saveCart() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
 function removeFromCart(name) {
   cart = cart.filter(item => item.name !== name);
-  localStorage.setItem('cart', JSON.stringify(cart));
+  saveCart();
   updateCart();
 }
 
@@ -113,28 +117,35 @@ function toggleCart() {
 }
 
 updateCart();
+
 async function checkout() {
   const cartForStripe = cart.map(item => ({
     name: item.name,
     price: item.price,
-    quantity: item.qty
+    qty: item.qty   // ✅ FIXED (important)
   }));
 
-  const res = await fetch("/api/create-checkout-session", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(cartForStripe)
-  });
+  try {
+    const res = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(cartForStripe)
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (data.url) {
-    window.location.href = data.url;
-  } else {
-    alert("Checkout failed");
-    console.log(data);
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      console.log(data);
+      alert("Checkout failed");
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("Server error");
   }
 }
 </script>
