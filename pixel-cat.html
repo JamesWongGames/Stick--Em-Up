@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Cat – Stick em’ up!</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <h1>Stick em’ up!</h1>
+  <nav>
+    <a href="index.html">Shop</a>
+    <a href="contact.html">Contact us</a>
+  </nav>
+  <button class="cart-btn" onclick="toggleCart()">🛒 Cart (<span id="cart-count">0</span>)</button>
+</header>
+
+<div class="cart-drawer" id="cart-drawer">
+  <h3>Your cart</h3>
+  <div id="cart-items"></div>
+  <p class="cart-total">Total: $<span id="cart-total">0.00</span></p>
+  <button class="checkout-btn">Checkout</button>
+</div>
+
+<div class="product-page">
+
+  <a href="index.html" class="back-link">← Back to shop</a>
+
+  <div class="product-layout">
+
+    <div class="product-image">
+      <img src="Pixel Cat.png" alt="Pixel Cat">
+    </div>
+
+    <div class="product-info">
+      <h1>Pixel Cat</h1>
+      <p class="product-price">$3.00</p>
+      <p class="product-desc">A cute little pixel cat with a big heart.</p>
+
+      <ul class="product-details">
+        <li>Perfect for decorating your everyday items</li>
+        <li>Waterproof vinyl</li>
+        <li>UV resistant ink</li>
+        <li>No residue when removed</li>
+      </ul>
+
+      <button class="add-btn-large" onclick="addToCart('Pixel Cat', 3.00)">Add to cart</button>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+  function addToCart(name, price) {
+    const total = cart.reduce((sum, i) => sum + i.qty, 0);
+    if (total >= 10) {
+      alert('You can only order 10 stickers at a time.');
+      return;
+    }
+    const existing = cart.find(item => item.name === name);
+    if (existing) {
+      existing.qty++;
+    } else {
+      cart.push({ name, price, qty: 1 });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCart();
+
+    const btn = document.querySelector('.add-btn-large');
+    btn.textContent = 'Added!';
+    setTimeout(() => btn.textContent = 'Add to cart', 1500);
+  }
+
+  function removeFromCart(name) {
+    cart = cart.filter(item => item.name !== name);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCart();
+  }
+
+  function updateCart() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+    document.getElementById('cart-count').textContent = cart.reduce((sum, i) => sum + i.qty, 0);
+    document.getElementById('cart-total').textContent = cart.reduce((sum, i) => sum + i.price * i.qty, 0).toFixed(2);
+    const list = document.getElementById('cart-items');
+    list.innerHTML = cart.length === 0
+      ? '<p class="empty">Your cart is empty.</p>'
+      : cart.map(i => `
+          <div class="cart-item">
+            <span>${i.name} x${i.qty}</span>
+            <span>$${(i.price * i.qty).toFixed(2)}</span>
+            <button onclick="removeFromCart('${i.name}')">✕</button>
+          </div>
+        `).join('');
+  }
+
+  function toggleCart() {
+    document.getElementById('cart-drawer').classList.toggle('open');
+  }
+
+  updateCart();
+</script>
+
+</body>
+</html>
