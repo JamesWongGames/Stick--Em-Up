@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     const cart = req.body;
 
     if (!Array.isArray(cart) || cart.length === 0) {
-      return res.status(400).json({ error: "Cart is empty or invalid" });
+      return res.status(400).json({ error: "Cart is empty" });
     }
 
     const line_items = cart.map(item => ({
@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         },
         unit_amount: Math.round(item.price * 100),
       },
-      quantity: item.qty, // IMPORTANT: must match frontend
+      quantity: item.qty,
     }));
 
     const session = await stripe.checkout.sessions.create({
@@ -31,7 +31,6 @@ export default async function handler(req, res) {
 
       line_items,
 
-      // 🧾 Address system
       billing_address_collection: "required",
 
       shipping_address_collection: {
@@ -45,7 +44,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ url: session.url });
 
   } catch (err) {
-    console.error("Stripe error:", err);
+    console.error(err);
     return res.status(500).json({ error: err.message });
   }
 }
