@@ -20,7 +20,7 @@
 <div class="cart-drawer" id="cart-drawer">
   <h3>Din kurv</h3>
   <div id="cart-items"></div>
-  <p class="cart-total">I alt: $<span id="cart-total">0.00</span></p>
+  <p class="cart-total">I alt: <span id="cart-total">0.00</span> DKK</p>
   <button class="checkout-btn">Gå til betaling</button>
 </div>
 
@@ -41,7 +41,7 @@
       </div>
       <div class="card-body">
         <h2>Sleeping Star</h2>
-        <p class="price">50 DKK</p>
+        <p class="price">10 DKK</p>
       </div>
     </div>
   </a>
@@ -53,7 +53,7 @@
       </div>
       <div class="card-body">
         <h2>Blue Ghost</h2>
-        <p class="price">35 DKK</p>
+        <p class="price">15 DKK</p>
       </div>
     </div>
   </a>
@@ -65,7 +65,7 @@
       </div>
       <div class="card-body">
         <h2>Galaxy Duck</h2>
-        <p class="price">70 DKK</p>
+        <p class="price">15 DKK</p>
       </div>
     </div>
   </a>
@@ -77,7 +77,7 @@
       </div>
       <div class="card-body">
         <h2>Pixel Cat</h2>
-        <p class="price">40 DKK</p>
+        <p class="price">10 DKK</p>
       </div>
     </div>
   </a>
@@ -104,7 +104,7 @@
       : cart.map(i => `
           <div class="cart-item">
             <span>${i.name} x${i.qty}</span>
-            <span>$${(i.price * i.qty).toFixed(2)}</span>
+            <span>${(i.price * i.qty).toFixed(2)} DKK</span>
             <button onclick="removeFromCart('${i.name}')">✕</button>
           </div>
         `).join('');
@@ -118,4 +118,4 @@
 </script>
 
 </body>
-</html>
+</html> 

@@ -20,7 +20,7 @@
 <div class="cart-drawer" id="cart-drawer">
   <h3>Din kurv</h3>
   <div id="cart-items"></div>
-  <p class="cart-total">I alt: $<span id="cart-total">0.00</span></p>
+  <p class="cart-total">I alt: <span id="cart-total">0.00</span> DKK</p>
   <button class="checkout-btn">Gå til betaling</button>
 </div>
 
@@ -36,7 +36,7 @@
 
     <div class="product-info">
       <h1>Galaxy Duck</h1>
-      <p class="product-price">35 DKK</p>
+      <p class="product-price">15 DKK</p>
       <p class="product-desc">En galakse-and fra det ydre rum.</p>
 
       <ul class="product-details">
@@ -46,7 +46,7 @@
         <li>Efterlader ingen rester ved fjernelse</li>
       </ul>
 
-      <button class="add-btn-large" onclick="addToCart('Galaxy Duck', 35.00)">Tilføj til kurv</button>
+      <button class="add-btn-large" onclick="addToCart('Galaxy Duck', 15.00)">Tilføj til kurv</button>
     </div>
 
   </div>
@@ -93,7 +93,7 @@ function updateCart() {
     : cart.map(i => `
       <div class="cart-item">
         <span>${i.name} x${i.qty}</span>
-        <span>$${(i.price * i.qty).toFixed(2)}</span>
+        <span>${(i.price * i.qty).toFixed(2)} DKK</span>
         <button onclick="removeFromCart('${i.name}')">✕</button>
       </div>
     `).join('');
