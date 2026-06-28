@@ -28,7 +28,7 @@
     I alt: <span id="cart-total">0.00</span> DKK
   </p>
 
-  <button class="checkout-btn">Gå til betaling</button>
+  <button class="checkout-btn" onclick="checkout()">Gå til betaling</button>
 </div>
 
 <div class="product-page">
@@ -115,6 +115,31 @@ function toggleCart() {
 }
 
 updateCart();
+
+async function checkout() {
+  const cartForStripe = cart.map(item => ({
+    name: item.name,
+    price: item.price,
+    quantity: item.qty
+  }));
+
+  const res = await fetch("/api/create-checkout-session", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(cartForStripe)
+  });
+
+  const data = await res.json();
+
+  if (data.url) {
+    window.location.href = data.url;
+  } else {
+    alert("Checkout failed");
+    console.log(data);
+  }
+}
 </script>
 
 </body>
