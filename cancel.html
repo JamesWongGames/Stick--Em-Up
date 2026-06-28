@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
   <meta charset="UTF-8">
-  <title>Payment Cancelled</title>
+  <title>Betaling gennemført</title>
   <link rel="stylesheet" href="style.css">
 </head>
+<body>
 
-<body class="status-page cancel">
-
-  <div class="status-card">
-    <h1>❌ Payment cancelled</h1>
-    <p>No worries — your cart is still saved.</p>
-
-    <a href="index.html" class="status-btn">Return to shop</a>
+  <div class="success-box">
+    <h1>Tak for din bestilling 🎉</h1>
+    <p>Din betaling er gennemført.</p>
+    <a href="index.html">Tilbage til shoppen</a>
   </div>
+
+  <script>
+    localStorage.removeItem("cart");
+  </script>
 
 </body>
 </html>
