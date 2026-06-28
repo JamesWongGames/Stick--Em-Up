@@ -14,13 +14,20 @@
     <a href="index.html">Butik</a>
     <a href="contact.html">Kontakt os</a>
   </nav>
-  <button class="cart-btn" onclick="toggleCart()">🛒 Kurv (<span id="cart-count">0</span>)</button>
+
+  <button class="cart-btn" onclick="toggleCart()">
+    🛒 Kurv (<span id="cart-count">0</span>)
+  </button>
 </header>
 
 <div class="cart-drawer" id="cart-drawer">
   <h3>Din kurv</h3>
   <div id="cart-items"></div>
-  <p class="cart-total">I alt: $<span id="cart-total">0.00</span></p>
+
+  <p class="cart-total">
+    I alt: <span id="cart-total">0.00</span> DKK
+  </p>
+
   <button class="checkout-btn" onclick="checkout()">Gå til betaling</button>
 </div>
 
@@ -49,9 +56,13 @@
 <script>
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 
+function saveCart() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
 function removeFromCart(name) {
   cart = cart.filter(item => item.name !== name);
-  localStorage.setItem('cart', JSON.stringify(cart));
+  saveCart();
   updateCart();
 }
 
@@ -63,12 +74,13 @@ function updateCart() {
     cart.reduce((sum, i) => sum + i.price * i.qty, 0).toFixed(2);
 
   const list = document.getElementById('cart-items');
+
   list.innerHTML = cart.length === 0
     ? '<p class="empty">Din kurv er tom.</p>'
     : cart.map(i => `
       <div class="cart-item">
         <span>${i.name} x${i.qty}</span>
-        <span>$${(i.price * i.qty).toFixed(2)}</span>
+        <span>${(i.price * i.qty).toFixed(2)} DKK</span>
         <button onclick="removeFromCart('${i.name}')">✕</button>
       </div>
     `).join('');
@@ -79,28 +91,35 @@ function toggleCart() {
 }
 
 updateCart();
+
 async function checkout() {
   const cartForStripe = cart.map(item => ({
     name: item.name,
     price: item.price,
-    quantity: item.qty
+    qty: item.qty   // ✅ FIXED
   }));
 
-  const res = await fetch("/api/create-checkout-session", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(cartForStripe)
-  });
+  try {
+    const res = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(cartForStripe)
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (data.url) {
-    window.location.href = data.url;
-  } else {
-    alert("Checkout failed");
-    console.log(data);
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      console.log(data);
+      alert("Checkout failed");
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("Server error");
   }
 }
 </script>
