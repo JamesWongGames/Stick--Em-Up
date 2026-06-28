@@ -728,3 +728,51 @@ body {
     overflow-x: hidden;
   }
 }
+/* ===== STATUS PAGES ===== */
+
+.status-page {
+  margin: 0;
+  font-family: system-ui, Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f3f4f6;
+}
+
+.status-card {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  width: 90%;
+  max-width: 420px;
+}
+
+.status-card h1 {
+  margin-bottom: 10px;
+}
+
+.status-page.success h1 {
+  color: #16a34a;
+}
+
+.status-page.cancel h1 {
+  color: #dc2626;
+}
+
+.status-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 18px;
+  background: #111;
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: 0.2s;
+}
+
+.status-btn:hover {
+  opacity: 0.8;
+}
