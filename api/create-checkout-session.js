@@ -2,7 +2,6 @@ import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-
 const TAX_RATE = 0.25;
 
 export default async function handler(req, res) {
@@ -23,11 +22,8 @@ export default async function handler(req, res) {
         product_data: {
           name: item.name,
         },
-
-       
         unit_amount: Math.round(item.price * (1 + TAX_RATE) * 100),
       },
-
       quantity: item.qty,
     }));
 
