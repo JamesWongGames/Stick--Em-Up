@@ -2,6 +2,9 @@ import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+
+const TAX_RATE = 0.25;
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -14,14 +17,17 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Cart is empty" });
     }
 
-    const line_items = cart.map(item => ({
+    const line_items = cart.map((item) => ({
       price_data: {
         currency: "dkk",
         product_data: {
           name: item.name,
         },
-        unit_amount: Math.round(item.price * 100),
+
+       
+        unit_amount: Math.round(item.price * (1 + TAX_RATE) * 100),
       },
+
       quantity: item.qty,
     }));
 
@@ -32,8 +38,9 @@ export default async function handler(req, res) {
       line_items,
 
       billing_address_collection: "required",
+
       shipping_address_collection: {
-        allowed_countries: ["DK", "SE", "NO", "DE", "NL", "US"]
+        allowed_countries: ["DK", "SE", "NO", "DE", "NL", "US"],
       },
 
       shipping_options: [
@@ -49,17 +56,11 @@ export default async function handler(req, res) {
         },
       ],
 
-      // 🔥 BEST WAY: automatic VAT handling
-      automatic_tax: {
-        enabled: true,
-      },
-
       success_url: `${req.headers.origin}/success.html`,
       cancel_url: `${req.headers.origin}/cancel.html`,
     });
 
     return res.status(200).json({ url: session.url });
-
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: err.message });
