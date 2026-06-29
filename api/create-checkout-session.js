@@ -48,7 +48,7 @@ export default async function handler(req, res) {
           shipping_rate_data: {
             type: "fixed_amount",
             fixed_amount: {
-              amount: 4900,
+              amount: 2000,
               currency: "dkk",
             },
             display_name: "Standard Fragt",
