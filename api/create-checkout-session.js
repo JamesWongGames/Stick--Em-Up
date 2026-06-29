@@ -23,8 +23,6 @@ export default async function handler(req, res) {
         unit_amount: Math.round(item.price * 100),
       },
       quantity: item.qty,
-      // 1. HER ER DIN MOMS PÅ PRODUKTER (Husk at ændre ID)
-      tax_rates: ["DIN_MOMS_RATE_ID"], 
     }));
 
     const session = await stripe.checkout.sessions.create({
@@ -34,25 +32,27 @@ export default async function handler(req, res) {
       line_items,
 
       billing_address_collection: "required",
-
       shipping_address_collection: {
         allowed_countries: ["DK", "SE", "NO", "DE", "NL", "US"]
       },
 
-      // 2. HER ER DIN MOMS PÅ FRAGT (Husk at ændre ID og beløb)
       shipping_options: [
         {
           shipping_rate_data: {
             type: "fixed_amount",
             fixed_amount: {
-              amount: 4900, // 49,00 DKK
+              amount: 4900,
               currency: "dkk",
             },
             display_name: "Standard Fragt",
-            tax_rates: ["DIN_MOMS_RATE_ID"], 
           },
         },
       ],
+
+      // 🔥 BEST WAY: automatic VAT handling
+      automatic_tax: {
+        enabled: true,
+      },
 
       success_url: `${req.headers.origin}/success.html`,
       cancel_url: `${req.headers.origin}/cancel.html`,
